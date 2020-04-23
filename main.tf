@@ -15,7 +15,7 @@ data "azurerm_subnet" "subnet" {
   resource_group_name  = "${var.networkrg}"
 }
 
-# create a network interface
+# create a network interface to be attached
 resource "azurerm_network_interface" "test" {
   name                = "${var.vmname}_nic"
   location            = "${var.location}"
