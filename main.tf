@@ -58,7 +58,7 @@ resource "azurerm_managed_disk" "shareddisk" {
 }
 
 # Create virtual machine
-resource "azurerm_virtual_machine" "vm" {
+resource "azurerm_linux_virtual_machine" "vm" {
     name                  = var.vmname
     location              = var.location
     resource_group_name   = data.azurerm_resource_group.rg.name
