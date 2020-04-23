@@ -75,11 +75,12 @@ resource "azurerm_linux_virtual_machine" "vm" {
     version   = var.osversion
   }
    
-   storage_os_disk {
+   os_disk {
     name              = "${var.vmname}_osdisk"
     caching           = "ReadWrite"
     create_option     = "FromImage"
-    managed_disk_type = "Premium_LRS"
+    disk_size_gb      = 127
+    storage_account_type  = "Premium_LRS"
   }
    
     admin_ssh_key {
