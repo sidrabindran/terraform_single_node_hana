@@ -63,38 +63,27 @@ resource "azurerm_linux_virtual_machine" "vm" {
     location              = var.location
     resource_group_name   = data.azurerm_resource_group.rg.name
     network_interface_ids = ["${azurerm_network_interface.test.id}"]
-    vm_size               = var.vmsize
-    
-# Uncomment this line to delete the OS disk automatically when deleting the VM
-delete_os_disk_on_termination = true
+    size                  = var.vmsize
+    admin_username        = var.admin
+    admin_password        = var.password
+    disable_password_authentication = false
 
-# Uncomment this line to delete the data disks automatically when deleting the VM
-delete_data_disks_on_termination = true
-
-  storage_image_reference {
+  source_image_reference {
     publisher = var.ospublisher
     offer     = var.osoffer
     sku       = var.ossku
     version   = var.osversion
   }
-   storage_os_disk {
+   
+   os_disk {
     name              = "${var.vmname}_osdisk"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Premium_LRS"
   }
-  
-   os_profile {
-    computer_name  = var.vmname
-    admin_username = var.admin
-    admin_password = var.password
-  }
-   os_profile_linux_config {
-    disable_password_authentication = false
-  }
-
-   admin_ssh_key {
-    username   = "adminuser"
+   
+    admin_ssh_key {
+    username   = "vmadmin"
     public_key = file("~/.ssh/id_rsa.pub")
   }
 
@@ -102,14 +91,14 @@ delete_data_disks_on_termination = true
 resource "azurerm_virtual_machine_data_disk_attachment" "datadisk" {
   count              = var.datadiskcount
   managed_disk_id    = element(azurerm_managed_disk.datadisk.*.id, count.index)
-  virtual_machine_id = azurerm_virtual_machine.vm.id
+  virtual_machine_id = azurerm_linux_virtual_machine.vm.id
   lun                = count.index
   caching            = "ReadOnly"
 }
 
 resource "azurerm_virtual_machine_data_disk_attachment" "logdisk" {
   managed_disk_id    = azurerm_managed_disk.logdisk.id
-  virtual_machine_id = azurerm_virtual_machine.vm.id
+  virtual_machine_id = azurerm_linux_virtual_machine.vm.id
   lun                = 2
   caching            = "None"
   write_accelerator_enabled = var.logdiskwa
@@ -117,7 +106,7 @@ resource "azurerm_virtual_machine_data_disk_attachment" "logdisk" {
 
 resource "azurerm_virtual_machine_data_disk_attachment" "shareddisk" {
   managed_disk_id    = azurerm_managed_disk.shareddisk.id
-  virtual_machine_id = azurerm_virtual_machine.vm.id
+  virtual_machine_id = azurerm_linux_virtual_machine.vm.id
   lun                = 3
   caching            = "None"
 }
