@@ -75,7 +75,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
     version   = var.osversion
   }
    
-   os_disk {
+   storage_os_disk {
     name              = "${var.vmname}_osdisk"
     caching           = "ReadWrite"
     create_option     = "FromImage"
