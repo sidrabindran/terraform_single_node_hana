@@ -93,6 +93,11 @@ delete_data_disks_on_termination = true
     disable_password_authentication = false
   }
 
+   admin_ssh_key {
+    username   = "adminuser"
+    public_key = file("~/.ssh/id_rsa.pub")
+  }
+
 }
 resource "azurerm_virtual_machine_data_disk_attachment" "datadisk" {
   count              = var.datadiskcount
