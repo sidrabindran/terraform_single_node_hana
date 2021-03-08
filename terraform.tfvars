@@ -1,6 +1,6 @@
 rg = "actifio_rhel_hana"
 networkrg ="East2_VNET"
-vnetname = "Sid_East2_VNET"
+vnetname = ""
 subnetname = "default"
 location   = "eastus2"
 vmsize ="Standard_DS14_v2"
